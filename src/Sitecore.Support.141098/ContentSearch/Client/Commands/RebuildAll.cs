@@ -25,14 +25,26 @@
         /// The translate.
         /// </summary>
         [NonSerialized]
-        private readonly ITranslate translate;
+        private ITranslate translate;
+
+        public ITranslate Translate
+        {
+            get
+            {
+                return this.translate ?? ContentSearchManager.Locator.GetInstance<ITranslate>();
+            }
+            set
+            {
+                this.translate = value;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RebuildAll"/> class.
         /// </summary>
         public RebuildAll()
         {
-            this.translate = ContentSearchManager.Locator.GetInstance<ITranslate>();
+            this.Translate = ContentSearchManager.Locator.GetInstance<ITranslate>();
         }
 
         /// <summary>
@@ -43,7 +55,7 @@
         /// </param>
         internal RebuildAll(ITranslate translate)
         {
-            this.translate = translate;
+            this.Translate = translate;
         }
 
         #region Public methods
@@ -66,8 +78,8 @@
         /// </param>
         protected void Run(ClientPipelineArgs args)
         {
-            var jobName = string.Format("{0}", this.translate.Text(Sitecore.ContentSearch.Localization.Texts.RebuildingAllIndexes));
-            var headerText = this.translate.Text(Sitecore.ContentSearch.Localization.Texts.RebuildingAllIndexes);
+            var jobName = string.Format("{0}", this.Translate.Text(Sitecore.ContentSearch.Localization.Texts.RebuildingAllIndexes));
+            var headerText = this.Translate.Text(Sitecore.ContentSearch.Localization.Texts.RebuildingAllIndexes);
             ProgressBox.ExecuteSync(jobName, headerText, "People/16x16/hammer.png", this.RebuildAllIndexes, this.RebuildDone);
         }
 
@@ -107,14 +119,14 @@
             string message;
             if (args.Parameters["failed"] == "1")
             {
-                message = this.translate.Text(
+                message = this.Translate.Text(
                     Sitecore.ContentSearch.Localization.Texts.RebuildingAllFailed,
                     args.Parameters["failedNumber"],
                     args.Parameters["totalNumber"]);
             }
             else
             {
-                message = this.translate.Text(Sitecore.ContentSearch.Localization.Texts.AllIndexesRebuilt);
+                message = this.Translate.Text(Sitecore.ContentSearch.Localization.Texts.AllIndexesRebuilt);
             }
 
             SheerResponse.Alert(message);
