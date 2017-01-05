@@ -27,15 +27,22 @@
         [NonSerialized]
         private ITranslate translate;
 
-        public ITranslate Translate
+        /// <summary>
+        /// Gets the translation API.
+        /// </summary>
+        protected ITranslate Translate
         {
             get
             {
-                return this.translate ?? ContentSearchManager.Locator.GetInstance<ITranslate>();
-            }
-            set
-            {
-                this.translate = value;
+                if (this.translate == null)
+                {
+                    Interlocked.CompareExchange(
+                        ref this.translate,
+                        ContentSearchManager.Locator.GetInstance<ITranslate>(),
+                        null);
+                }
+
+                return this.translate;
             }
         }
 
@@ -44,7 +51,7 @@
         /// </summary>
         public RebuildAll()
         {
-            this.Translate = ContentSearchManager.Locator.GetInstance<ITranslate>();
+            this.translate = ContentSearchManager.Locator.GetInstance<ITranslate>();
         }
 
         /// <summary>
@@ -55,7 +62,7 @@
         /// </param>
         internal RebuildAll(ITranslate translate)
         {
-            this.Translate = translate;
+            this.translate = translate;
         }
 
         #region Public methods

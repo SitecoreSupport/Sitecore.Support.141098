@@ -59,7 +59,9 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentSearch\Client\Commands\Rebuild.cs" />
     <Compile Include="ContentSearch\Client\Commands\RebuildAll.cs" />
+    <Compile Include="ContentSearch\Client\Commands\RefreshTree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
